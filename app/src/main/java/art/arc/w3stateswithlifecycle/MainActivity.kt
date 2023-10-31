@@ -9,13 +9,24 @@ import android.os.PersistableBundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import java.util.Date
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var text : TextView
     private lateinit var button : Button
+    private lateinit var button2 : Button
     private lateinit var sharedPref : SharedPreferences
+
+    private val getResultFromAct2 : ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == 1111) {
+                text.setText("wynik = ${it.data?.getIntExtra("liczba2",0)}")
+            }
+        }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +45,14 @@ class MainActivity : AppCompatActivity() {
         text.text = savedInstanceState?.getString("STATE1")
 
         sharedPref = applicationContext?.getSharedPreferences("SHPref1", Context.MODE_PRIVATE)?:return
-        text.text = sharedPref!!.getString("STATE1", "")
+        text.text = sharedPref.getString("STATE1", "")
+
+        button2 = findViewById(R.id.b2)
+        button2.setOnClickListener {
+            val getFrom2 = Intent(applicationContext, MainActivity2::class.java)
+            getFrom2.putExtra("liczba2",0)
+            getResultFromAct2.launch(getFrom2)
+        }
     }
 
     override fun onStart() {
@@ -50,7 +68,7 @@ class MainActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         Log.i("LIVECYCLE", "onStop")
-        with(sharedPref?.edit()?:return) {
+        with(sharedPref.edit()?:return) {
             putString("STATE1", text.text.toString())
             apply()
         }
