@@ -1,2 +1,2 @@
-# w3statesWithLifeCycle
-Zarządzanie cyklem życia aktywności
+# WYkład 3 w3statesWithLifeCycle
+Zarządzanie cyklem życia aktywności, przekazywanie parametrów między aktynościami oprogramowania
